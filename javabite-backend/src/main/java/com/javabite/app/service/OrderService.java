@@ -64,12 +64,11 @@ public class OrderService {
             MenuItem menuItem = menuItemRepository.findById(itemRequest.getMenuItemId())
                     .orElseThrow(() -> new RuntimeException("Menu item not found"));
 
-            // Make sure to convert BigDecimal to Double
             OrderItem orderItem = OrderItem.builder()
                     .order(order)
                     .menuItem(menuItem)
                     .quantity(itemRequest.getQuantity())
-                    .priceAtOrder(menuItem.getPrice().doubleValue())  // ← Change from .price()  // ✅ Convert to Double
+                    .priceAtOrder(menuItem.getPrice().doubleValue())
                     .build();
 
             order.addOrderItem(orderItem);
@@ -86,7 +85,7 @@ public class OrderService {
 
         // ✅ Check if table already has chef/waiter assigned from previous orders
         List<Order> tableOrders = orderRepository.findByTableBooking(booking);
-        if (tableOrders.size() > 1) { // More than just this order
+        if (tableOrders.size() > 1) {
             Order firstOrder = tableOrders.get(0);
             if (firstOrder.getChef() != null && !firstOrder.getId().equals(savedOrder.getId())) {
                 savedOrder.setChef(firstOrder.getChef());
@@ -166,7 +165,8 @@ public class OrderService {
     }
 
     /**
-     * ✅ Assign WAITER to order (and all orders on same table)
+     * ✅✅✅ FIXED: Assign WAITER to order (and all orders on same table)
+     * Orders are assigned to waiter FIRST, then added to queue if waiter is busy
      */
     @Transactional
     public Order assignWaiterToOrder(Long orderId, Long waiterId) {
@@ -192,19 +192,7 @@ public class OrderService {
 
         List<Order> tableOrders = orderRepository.findByTableBooking(booking);
 
-        // Check if waiter can accept
-        if (!waiter.canAcceptOrder()) {
-            // Add ALL table orders to queue
-            for (Order tableOrder : tableOrders) {
-                if (tableOrder.getWaiter() == null && !isOrderInWaiterQueue(tableOrder.getId())) {
-                    addToWaiterQueue(tableOrder, waiter);
-                }
-            }
-            log.info("⏳ Table {} orders added to Waiter {} queue", booking.getTableNumber(), waiter.getName());
-            throw new RuntimeException("Waiter is busy. Orders added to queue.");
-        }
-
-        // ✅ Assign waiter to ALL orders on table
+        // ✅✅✅ CRITICAL FIX: Assign waiter to ALL orders FIRST
         for (Order tableOrder : tableOrders) {
             if (tableOrder.getWaiter() == null) {
                 tableOrder.setWaiter(waiter);
@@ -214,8 +202,29 @@ public class OrderService {
             }
         }
 
+        // Check if waiter can accept (has capacity)
+        if (!waiter.canAcceptOrder()) {
+            // ✅ Waiter is busy - add orders to queue (waiter already assigned above)
+            for (Order tableOrder : tableOrders) {
+                if (!isOrderInWaiterQueue(tableOrder.getId())) {
+                    addToWaiterQueue(tableOrder, waiter);
+                }
+            }
+            log.info("⏳ Table {} orders assigned to Waiter {} and added to queue (waiter busy)",
+                    booking.getTableNumber(), waiter.getName());
+
+            // ✅✅✅ DON'T THROW EXCEPTION - Orders are successfully assigned!
+            // Return success - orders are assigned to waiter and will be activated from queue
+            return orderRepository.findById(orderId)
+                    .orElseThrow(() -> new RuntimeException("Order not found"));
+        }
+
+        // ✅ Waiter has capacity - increment active orders immediately
         waiter.incrementActiveOrders();
         userRepository.save(waiter);
+
+        log.info("✅ Waiter {} assigned to all orders on Table {} (immediate capacity)",
+                waiter.getName(), booking.getTableNumber());
 
         return orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
@@ -484,8 +493,13 @@ public class OrderService {
 
         log.info("✅ Chef {} marked Order #{} as READY", chef.getName(), orderId);
 
-        // ✅ NEW: Process chef queue after marking order ready
+        // ✅ Process chef queue after marking order ready
         processChefQueue(chefId);
+
+        // ✅✅✅ NEW: Process waiter queue when order becomes READY
+        if (order.getWaiter() != null) {
+            processWaiterQueueForReadyOrder(order.getWaiter().getId());
+        }
 
         return order;
     }
@@ -547,14 +561,14 @@ public class OrderService {
             if (allCompleted) {
                 booking.setStatus(BookingStatus.COMPLETED);
                 bookingRepository.save(booking);
-                log.info("✅ All orders completed - Table {} booking COMPLETED → AVAILABLE",
+                log.info("✅ All orders completed - Table {} booking COMPLETED",
                         booking.getTableNumber());
             }
         }
 
         log.info("✅ Waiter {} marked Order #{} as SERVED & COMPLETED", waiter.getName(), orderId);
 
-        // ✅ NEW: Process waiter queue after completing order
+        // ✅ Process waiter queue after completing order
         processWaiterQueue(waiterId);
 
         return order;
@@ -568,13 +582,11 @@ public class OrderService {
         User waiter = userRepository.findById(waiterId)
                 .orElseThrow(() -> new RuntimeException("Waiter not found"));
 
-        // Check if waiter can accept more orders
         if (!waiter.canAcceptOrder()) {
             log.info("⏭️ Waiter {} is still busy, skipping queue processing", waiter.getName());
             return;
         }
 
-        // Get next order in queue for this waiter
         List<WaiterQueue> queue = waiterQueueRepository.findByWaiterOrderByQueuePositionAsc(waiter);
 
         if (queue.isEmpty()) {
@@ -586,28 +598,49 @@ public class OrderService {
         Order order = nextInQueue.getOrder();
 
         try {
-            // Assign waiter to order
-            order.setWaiter(waiter);
-            order.setWaiterAssignedAt(LocalDateTime.now());
-            orderRepository.save(order);
-
-            // Remove from queue
+            // ✅ Order already has waiter assigned, just remove from queue and increment capacity
             waiterQueueRepository.delete(nextInQueue);
 
-            // Increment waiter's active orders
             waiter.incrementActiveOrders();
             userRepository.save(waiter);
 
-            log.info("✅ Auto-assigned queued Order #{} to Waiter {} from queue",
+            log.info("✅ Removed Order #{} from Waiter {} queue - now active",
                     order.getId(), waiter.getName());
         } catch (Exception e) {
-            log.error("❌ Failed to assign queued order: {}", e.getMessage());
+            log.error("❌ Failed to process queued order: {}", e.getMessage());
+        }
+    }
+
+    /**
+     * ✅✅✅ NEW: Process waiter queue when order becomes READY (not just when order is served)
+     * This handles the case where queued orders become READY before waiter has capacity
+     */
+    @Transactional
+    public void processWaiterQueueForReadyOrder(Long waiterId) {
+        User waiter = userRepository.findById(waiterId)
+                .orElseThrow(() -> new RuntimeException("Waiter not found"));
+
+        // Get queued orders that are now READY
+        List<WaiterQueue> queue = waiterQueueRepository.findByWaiterOrderByQueuePositionAsc(waiter);
+
+        for (WaiterQueue queueEntry : queue) {
+            Order order = queueEntry.getOrder();
+
+            // If order in queue is now READY and waiter has capacity, activate it
+            if (order.getStatus() == OrderStatus.READY && waiter.canAcceptOrder()) {
+                waiterQueueRepository.delete(queueEntry);
+                waiter.incrementActiveOrders();
+                userRepository.save(waiter);
+
+                log.info("✅ Activated READY order #{} from Waiter {} queue",
+                        order.getId(), waiter.getName());
+                break; // Process one at a time
+            }
         }
     }
 
     /**
      * ✅ Get waiter's ASSIGNED orders (all statuses except COMPLETED/CANCELLED)
-     * This includes PENDING, PREPARING, and READY orders
      */
     public List<Order> getWaiterAssignedOrders(Long waiterId) {
         User waiter = userRepository.findById(waiterId)
@@ -634,22 +667,19 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    // Add this method to OrderService.java
-
     /**
      * Get all orders assigned to a waiter (both preparing and ready)
-     * This is for the waiter dashboard to show all their orders
      */
     public List<Order> getWaiterAllAssignedOrders(Long waiterId) {
         User waiter = userRepository.findById(waiterId)
                 .orElseThrow(() -> new RuntimeException("Waiter not found"));
 
-        // Get all orders assigned to this waiter that are not completed/cancelled
         return orderRepository.findByWaiter(waiter).stream()
                 .filter(o -> o.getStatus() != OrderStatus.COMPLETED &&
                         o.getStatus() != OrderStatus.CANCELLED)
                 .collect(Collectors.toList());
     }
+
     // ==================== ADMIN METHODS ====================
 
     /**

@@ -58,7 +58,7 @@
       <option value="300" />
     </hideBySeverity>
     <option name="proportion" value="0.8242075" />
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
     <option name="showPreview" value="true" />
   </component>
   <component name="ProjectColorInfo">{
@@ -185,7 +185,7 @@
       <workItem from="1765117318514" duration="43030000" />
       <workItem from="1765696435535" duration="26064000" />
       <workItem from="1765737285834" duration="1603000" />
-      <workItem from="1766686351038" duration="10678000" />
+      <workItem from="1766686351038" duration="13433000" />
     </task>
     <task id="LOCAL-00001" summary="login and signup Authentication done by backend.">
       <option name="closed" value="true" />
@@ -259,7 +259,15 @@
       <option name="project" value="LOCAL" />
       <updated>1765736906493</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Table booking is completed from admin and customer dashboard.">
+      <option name="closed" value="true" />
+      <created>1766817613423</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1766817613423</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -320,7 +328,8 @@
     <MESSAGE value="Backend Flow and Frontend flow is ready. just need to correct the order flow and bugs in various dashboards." />
     <MESSAGE value="Assignment bug fixed order is now routed to chef dashboard and waiter dashboard correctly." />
     <MESSAGE value="Order Assignment bug fixed Order is now routed to chef dashboard and waiter dashboard correctly." />
-    <option name="LAST_COMMIT_MESSAGE" value="Order Assignment bug fixed Order is now routed to chef dashboard and waiter dashboard correctly." />
+    <MESSAGE value="Table booking is completed from admin and customer dashboard." />
+    <option name="LAST_COMMIT_MESSAGE" value="Table booking is completed from admin and customer dashboard." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
