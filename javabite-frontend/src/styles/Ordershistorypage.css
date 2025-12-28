@@ -1,4 +1,19 @@
-/* Improved Orders History Page - Table Layout */
+
+/* Force isolation from AdminDashboard.css */
+.orders-history {
+    all: initial;
+    display: block;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.orders-history * {
+    all: revert;
+}
+
+/* Then your existing styles continue below... */
+
+
+/* Improved Orders History Page - FINAL FIX */
 
 .orders-history {
     padding: 24px;
@@ -218,7 +233,7 @@
 .btn-export:hover {
     background: #1c6108;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(207, 137, 36, 0.3);
+    box-shadow: 0 4px 12px rgba(69, 175, 39, 0.3);
 }
 
 /* Advanced Filters */
@@ -272,7 +287,7 @@
     font-weight: 500;
 }
 
-/* Orders Table */
+/* Orders Table - FIXED LAYOUT */
 .orders-table-container {
     background: white;
     border-radius: 12px;
@@ -283,6 +298,7 @@
 .orders-table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed; /* ✅ CRITICAL FIX - Forces columns to respect width */
 }
 
 .orders-table thead {
@@ -290,15 +306,24 @@
 }
 
 .orders-table th {
-    padding: 16px;
+    padding: 16px 12px;
     text-align: left;
     font-size: 13px;
     font-weight: 700;
     color: #7f8c8d;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
     border-bottom: 2px solid #e0e0e0;
 }
+
+/* ✅ COLUMN WIDTH FIX - Set specific widths */
+.orders-table th:nth-child(1) { width: 140px; } /* Order ID */
+.orders-table th:nth-child(2) { width: 200px; } /* Customer */
+.orders-table th:nth-child(3) { width: 100px; } /* Table */
+.orders-table th:nth-child(4) { width: 80px; }  /* Items */
+.orders-table th:nth-child(5) { width: 120px; } /* Amount */
+.orders-table th:nth-child(6) { width: 140px; } /* Status */
+.orders-table th:nth-child(7) { width: 80px; }  /* Action */
 
 .orders-table tbody tr {
     border-bottom: 1px solid #f0f0f0;
@@ -310,12 +335,20 @@
 }
 
 .orders-table td {
-    padding: 16px;
+    padding: 16px 12px;
     font-size: 14px;
     color: #2c3e50;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Table Cells */
+.order-id-cell {
+    padding-left: .6rem;
+    display: flex;
+    flex-direction: column;
+}
+
 .order-id-cell strong {
     font-size: 15px;
     color: #2c3e50;
@@ -337,16 +370,23 @@
     font-weight: 600;
     color: #2c3e50;
     margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .customer-email {
     font-size: 12px;
     color: #95a5a6;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .table-cell {
     font-weight: 500;
     color: #7f8c8d;
+    text-align: left;
 }
 
 .items-count {
@@ -356,19 +396,36 @@
 }
 
 .amount-cell {
+    text-align: center;
     font-size: 16px;
     font-weight: 700;
     color: #27ae60;
 }
 
+/* ✅ STATUS BADGE - FINAL FIX */
 .status-badge {
-    padding: 6px 12px;
+    padding: 8px 12px;
     border-radius: 20px;
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
     white-space: nowrap;
     display: inline-block;
+    text-align: center;
+    letter-spacing: 0.5px;
+    min-width: 100px;
+}
+
+/* Status column alignment */
+.orders-table th:nth-child(6),
+.orders-table td:nth-child(6) {
+    text-align: center;
+}
+
+/* Action column */
+.orders-table th:nth-child(7),
+.orders-table td:nth-child(7) {
+    text-align: center;
 }
 
 .btn-action {
@@ -450,7 +507,7 @@
     }
 }
 
-/* Responsive */
+/* Responsive - Make table scrollable on small screens */
 @media (max-width: 1200px) {
     .filters-row-main {
         grid-template-columns: 1fr;
@@ -459,19 +516,20 @@
     .date-range-picker {
         grid-column: 1;
     }
-}
 
-@media (max-width: 768px) {
-    .stats-grid {
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    }
-
+    /* Make table horizontally scrollable */
     .orders-table-container {
         overflow-x: auto;
     }
 
     .orders-table {
-        min-width: 800px;
+        min-width: 900px; /* Ensure minimum width */
+    }
+}
+
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     }
 
     .stat-card {
@@ -483,26 +541,4 @@
         height: 48px;
         font-size: 20px;
     }
-}
-
-/* Status Column - Enhanced Visibility */
-.orders-table td .status-badge {
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    display: inline-block;
-    min-width: 90px;
-    text-align: center;
-    letter-spacing: 0.5px;
-}
-
-.orders-table th:nth-child(6) {
-    min-width: 140px;
-    text-align: center;
-}
-
-.orders-table td:nth-child(6) {
-    text-align: center;
 }

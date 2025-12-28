@@ -289,18 +289,6 @@ const OrdersHistoryPage = () => {
 
     return (
         <div className="orders-history">
-            {/* Header */}
-            <div className="orders-header">
-                <div>
-                    <h2>Orders History</h2>
-                    <p className="breadcrumb">Home / Orders</p>
-                </div>
-                <div className="header-actions">
-                    <button className="btn-icon" title="Notifications">
-                        🔔
-                    </button>
-                </div>
-            </div>
 
             {/* Alerts */}
             {error && (
@@ -491,7 +479,17 @@ const OrdersHistoryPage = () => {
             </div>
 
             {/* Orders Table */}
-            <div className="orders-table-container">
+            <div
+                className="orders-table-container"
+                style={{
+                    display: 'block',
+                    background: 'white',
+                    borderRadius: '12px',
+                    overflow: 'hidden',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
+                }}
+            >
+
                 {filteredOrders.length === 0 ? (
                     <div className="empty-state">
                         <div className="empty-icon">🛒</div>
@@ -511,13 +509,13 @@ const OrdersHistoryPage = () => {
                     <table className="orders-table">
                         <thead>
                         <tr>
-                            <th>Order ID</th>
-                            <th>Customer</th>
-                            <th>Table</th>
-                            <th>Items</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-                            <th>Action</th>
+                            <th style={{ display: 'table-cell', padding: '16px 12px' }}>Order ID</th>
+                            <th style={{ display: 'table-cell', padding: '16px 12px' }}>Customer</th>
+                            <th style={{ display: 'table-cell', padding: '16px 12px' }}>Table</th>
+                            <th style={{ display: 'table-cell', padding: '16px 12px', textAlign:"center" }}>Items</th>
+                            <th style={{ display: 'table-cell', padding: '16px 12px', textAlign:"center" }}>Amount</th>
+                            <th style={{ display: 'table-cell', padding: '16px 12px' }}>Status</th>
+                            <th style={{ display: 'table-cell', padding: '16px 12px' }}>Action</th>
                         </tr>
                         </thead>
                         <tbody>

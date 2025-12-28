@@ -4,6 +4,7 @@ import AdminTableBookingManagement from '../components/AdminTableBookingManageme
 import StaffContent from '../components/StaffContent';
 import OrdersHistoryPage from '../components/OrdersHistoryPage';
 import '../styles/AdminDashboard.css';
+import ReportsContent from '../components/ReportsContent';
 
 const AdminDashboard = () => {
     const [activeTab, setActiveTab] = useState('dashboard');
@@ -419,6 +420,7 @@ const AdminDashboard = () => {
                     )}
 
                     {activeTab === 'orders-history' && <OrdersHistoryPage />}
+                    {activeTab === 'reports' && <ReportsContent />}
 
                     {activeTab === 'bookings' && (
                         <AdminTableBookingManagement />
@@ -806,16 +808,6 @@ const MenuContent = ({ menuItems, onEdit, onDelete, onAdd }) => (
                     </div>
                 </div>
             ))}
-        </div>
-    </div>
-);
-
-const ReportsContent = () => (
-    <div className="reports-content">
-        <div className="empty-state">
-            <div className="empty-icon">📊</div>
-            <h3>Reports & Analytics</h3>
-            <p>Coming soon - View detailed reports and analytics here</p>
         </div>
     </div>
 );
