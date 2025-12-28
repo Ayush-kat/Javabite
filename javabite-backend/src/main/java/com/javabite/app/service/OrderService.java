@@ -700,4 +700,191 @@ public class OrderService {
 
         return stats;
     }
+
+    /**
+     * Get all orders (for admin history page)
+     */
+    public List<Order> getAllOrders() {
+        log.info("Fetching all orders");
+        return orderRepository.findAllByOrderByCreatedAtDesc();
+    }
+
+    /**
+     * Get order by ID (for admin - different from customer getOrderById)
+     * Note: If you already have a getOrderById method, keep it and use this one
+     * OR rename this to getOrderByIdAdmin()
+     */
+    public Order getOrderByIdForAdmin(Long orderId) {
+        return orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderId));
+    }
+
+    /**
+     * Cancel order by admin
+     */
+    @Transactional
+    public void cancelOrderByAdmin(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderId));
+
+        if (order.getStatus() == OrderStatus.COMPLETED) {
+            throw new RuntimeException("Cannot cancel completed order");
+        }
+
+        if (order.getStatus() == OrderStatus.CANCELLED) {
+            throw new RuntimeException("Order is already cancelled");
+        }
+
+        order.setStatus(OrderStatus.CANCELLED);
+        order.setCancelledAt(LocalDateTime.now());
+
+        // Free up chef and waiter if assigned
+        if (order.getChef() != null) {
+            User chef = order.getChef();
+            chef.decrementActiveOrders();
+            userRepository.save(chef);
+        }
+
+        if (order.getWaiter() != null) {
+            User waiter = order.getWaiter();
+            waiter.decrementActiveOrders();
+            userRepository.save(waiter);
+        }
+
+        orderRepository.save(order);
+        log.info("Order {} cancelled by admin", orderId);
+    }
+
+    /**
+     * Update order notes (admin internal notes)
+     */
+    @Transactional
+    public void updateOrderNotes(Long orderId, String notes) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderId));
+        order.setAdminNotes(notes);
+        orderRepository.save(order);
+        log.info("Order {} notes updated", orderId);
+    }
+
+    /**
+     * Refund order
+     */
+    @Transactional
+    public void refundOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderId));
+
+        if (order.getStatus() != OrderStatus.COMPLETED) {
+            throw new RuntimeException("Only completed orders can be refunded");
+        }
+
+        if ("REFUNDED".equals(order.getPaymentStatus())) {
+            throw new RuntimeException("Order is already refunded");
+        }
+
+        order.setPaymentStatus("REFUNDED");
+        orderRepository.save(order);
+        log.info("Order {} refunded", orderId);
+    }
+
+    /**
+     * Reassign staff to order
+     */
+    @Transactional
+    public void reassignStaff(Long orderId, Long chefId, Long waiterId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderId));
+
+        // Remove from current staff if assigned
+        if (order.getChef() != null) {
+            User currentChef = order.getChef();
+            currentChef.decrementActiveOrders();
+            userRepository.save(currentChef);
+        }
+
+        if (order.getWaiter() != null) {
+            User currentWaiter = order.getWaiter();
+            currentWaiter.decrementActiveOrders();
+            userRepository.save(currentWaiter);
+        }
+
+        // Assign new staff
+        if (chefId != null) {
+            User newChef = userRepository.findById(chefId)
+                    .orElseThrow(() -> new RuntimeException("Chef not found"));
+            order.setChef(newChef);
+            order.setChefAssignedAt(LocalDateTime.now());
+            newChef.incrementActiveOrders();
+            userRepository.save(newChef);
+        }
+
+        if (waiterId != null) {
+            User newWaiter = userRepository.findById(waiterId)
+                    .orElseThrow(() -> new RuntimeException("Waiter not found"));
+            order.setWaiter(newWaiter);
+            order.setWaiterAssignedAt(LocalDateTime.now());
+            newWaiter.incrementActiveOrders();
+            userRepository.save(newWaiter);
+        }
+
+        orderRepository.save(order);
+        log.info("Order {} staff reassigned", orderId);
+    }
+
+    /**
+     * Get order statistics - FIXED VERSION (handles BigDecimal)
+     */
+    public Map<String, Object> getOrderStatistics() {
+        List<Order> allOrders = orderRepository.findAll();
+
+        long pending = allOrders.stream()
+                .filter(o -> o.getStatus() == OrderStatus.PENDING)
+                .count();
+
+        long preparing = allOrders.stream()
+                .filter(o -> o.getStatus() == OrderStatus.PREPARING)
+                .count();
+
+        long ready = allOrders.stream()
+                .filter(o -> o.getStatus() == OrderStatus.READY)
+                .count();
+
+        long completed = allOrders.stream()
+                .filter(o -> o.getStatus() == OrderStatus.COMPLETED)
+                .count();
+
+        long cancelled = allOrders.stream()
+                .filter(o -> o.getStatus() == OrderStatus.CANCELLED)
+                .count();
+
+        LocalDate today = LocalDate.now();
+
+        // FIXED: Convert BigDecimal to double properly
+        double todaySales = allOrders.stream()
+                .filter(o -> o.getCreatedAt().toLocalDate().equals(today))
+                .filter(o -> o.getTotal() != null)
+                .mapToDouble(o -> o.getTotal().doubleValue())  // ← FIXED: .doubleValue()
+                .sum();
+
+        // FIXED: Convert BigDecimal to double properly
+        double avgOrderValue = allOrders.stream()
+                .filter(o -> o.getTotal() != null)
+                .mapToDouble(o -> o.getTotal().doubleValue())  // ← FIXED: .doubleValue()
+                .average()
+                .orElse(0.0);
+
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("pending", pending);
+        stats.put("preparing", preparing);
+        stats.put("ready", ready);
+        stats.put("completed", completed);
+        stats.put("cancelled", cancelled);
+        stats.put("total", allOrders.size());
+        stats.put("todaySales", todaySales);
+        stats.put("avgOrderValue", avgOrderValue);
+
+        return stats;
+    }
+
 }

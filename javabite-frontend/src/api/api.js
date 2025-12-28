@@ -314,6 +314,60 @@ export const adminApi = {
         });
         return data;
     },
+
+    // ========== ORDERS HISTORY METHODS ==========
+    // Get all orders (for history page)
+    getAllOrders: async () => {
+        const data = await apiCall('/admin/orders/all');
+        return data;
+    },
+
+    // Cancel order (admin)
+    cancelOrderAdmin: async (orderId) => {
+        const data = await apiCall(`/admin/orders/${orderId}/cancel`, {
+            method: 'PUT',
+        });
+        return data;
+    },
+
+    // Update order notes (admin)
+    updateOrderNotes: async (orderId, notes) => {
+        const data = await apiCall(`/admin/orders/${orderId}/notes`, {
+            method: 'PUT',
+            body: JSON.stringify({ notes }),
+        });
+        return data;
+    },
+
+    // Refund order (admin)
+    refundOrder: async (orderId) => {
+        const data = await apiCall(`/admin/orders/${orderId}/refund`, {
+            method: 'POST',
+        });
+        return data;
+    },
+
+    // Reassign staff to order
+    reassignStaff: async (orderId, staffData) => {
+        const data = await apiCall(`/admin/orders/${orderId}/reassign`, {
+            method: 'PUT',
+            body: JSON.stringify(staffData),
+        });
+        return data;
+    },
+
+    // Get order by ID with full details
+    getOrderDetails: async (orderId) => {
+        const data = await apiCall(`/admin/orders/${orderId}`);
+        return data;
+    },
+
+    // Export orders to CSV (returns CSV data)
+    exportOrdersCSV: async (filters = {}) => {
+        const params = new URLSearchParams(filters);
+        const data = await apiCall(`/admin/orders/export/csv?${params}`);
+        return data;
+    },
 };
 
 // ============= CHEF API =============

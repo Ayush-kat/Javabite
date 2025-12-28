@@ -176,7 +176,6 @@ public class UserService {
 
         userRepository.save(chef);
 
-        // TODO: Send email with link: /accept-invite?token={token}
         log.info("Chef invitation sent to {}", email);
 
         return token;  // Return for testing

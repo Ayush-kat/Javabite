@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { adminApi } from '../api/api';
 import AdminTableBookingManagement from '../components/AdminTableBookingManagement';
 import StaffContent from '../components/StaffContent';
-
+import OrdersHistoryPage from '../components/OrdersHistoryPage';
 import '../styles/AdminDashboard.css';
 
 const AdminDashboard = () => {
@@ -318,10 +318,11 @@ const AdminDashboard = () => {
                     {[
                         { id: 'dashboard', icon: '📊', label: 'Dashboard' },
                         { id: 'orders', icon: '🛒', label: 'Orders', badge: pendingOrders.length },
+                        { id: 'orders-history', icon: '📜', label: 'Orders History' },
                         { id: 'bookings', icon: '📅', label: 'Bookings' },
                         { id: 'products', icon: '📦', label: 'Menu Items' },
                         { id: 'staff', icon: '👥', label: 'Staff' },
-                        { id: 'reports', icon: '📈', label: 'Reports' }
+                        { id: 'reports', icon: '📈', label: 'Reports' },
                     ].map(item => (
                         <button
                             key={item.id}
@@ -354,19 +355,19 @@ const AdminDashboard = () => {
                             Home / {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
                         </div>
                     </div>
-                    <div className="header-actions">
-                        <button className="header-btn" onClick={fetchData}>
-                            🔄
-                        </button>
-                        <button className="header-btn">
-                            💬
-                            <span className="notification-dot"></span>
-                        </button>
-                        <button className="header-btn">
-                            🔔
-                            <span className="notification-dot"></span>
-                        </button>
-                    </div>
+                    {/*<div className="header-actions">*/}
+                    {/*    <button className="header-btn" onClick={fetchData}>*/}
+                    {/*        🔄*/}
+                    {/*    </button>*/}
+                    {/*    <button className="header-btn">*/}
+                    {/*        💬*/}
+                    {/*        <span className="notification-dot"></span>*/}
+                    {/*    </button>*/}
+                    {/*    <button className="header-btn">*/}
+                    {/*        🔔*/}
+                    {/*        <span className="notification-dot"></span>*/}
+                    {/*    </button>*/}
+                    {/*</div>*/}
                 </header>
 
                 {/* Error/Success Messages */}
@@ -416,6 +417,8 @@ const AdminDashboard = () => {
                             loading={loading}
                         />
                     )}
+
+                    {activeTab === 'orders-history' && <OrdersHistoryPage />}
 
                     {activeTab === 'bookings' && (
                         <AdminTableBookingManagement />
@@ -793,10 +796,10 @@ const MenuContent = ({ menuItems, onEdit, onDelete, onAdd }) => (
                         </div>
                         <p className="menu-description">{item.description}</p>
                         <div className="menu-actions">
-                            <button onClick={() => onEdit(item)} className="btn btn-sm btn-primary">
+                            <button onClick={() => onEdit(item)} className="menu-actions-btn-edit">
                                 Edit
                             </button>
-                            <button onClick={() => onDelete(item.id)} className="btn btn-sm btn-danger">
+                            <button onClick={() => onDelete(item.id)} className="menu-actions-btn-delete">
                                 Delete
                             </button>
                         </div>

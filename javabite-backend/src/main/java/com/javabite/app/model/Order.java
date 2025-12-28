@@ -6,9 +6,13 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Entity
 @Table(name = "orders")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Getter
 @Setter
 @Builder
@@ -19,28 +23,33 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)  // ← Change to EAGER
     @JoinColumn(name = "customer_id", nullable = false)
+    @JsonIgnoreProperties({"orders", "bookings", "password", "hibernateLazyInitializer"})
     private User customer;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)  // ← Change to EAGER
     @JoinColumn(name = "table_booking_id")
+    @JsonIgnoreProperties({"orders", "customer", "hibernateLazyInitializer"})
     private TableBooking tableBooking;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)  // ← Change to EAGER
     @JoinColumn(name = "chef_id")
+    @JsonIgnoreProperties({"orders", "password", "hibernateLazyInitializer"})
     private User chef;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)  // ← Change to EAGER
     @JoinColumn(name = "waiter_id")
+    @JsonIgnoreProperties({"orders", "password", "hibernateLazyInitializer"})
     private User waiter;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private OrderStatus status;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)  // ← Change to EAGER
+    @JsonIgnoreProperties({"order", "hibernateLazyInitializer"})
+    @Fetch(FetchMode.SUBSELECT)  // ← ADD THIS to avoid N+1 query problem
     private List<OrderItem> items = new ArrayList<>();
 
     @Column(name = "special_instructions", length = 500)
@@ -75,6 +84,20 @@ public class Order {
 
     @Column(name = "auto_assigned")
     private boolean autoAssigned = false;
+    @Column(name = "admin_notes", columnDefinition = "TEXT")
+    private String adminNotes;
+
+    @Column(name = "payment_status")
+    private String paymentStatus = "UNPAID"; // UNPAID, PAID, REFUNDED
+
+    @Column(name = "payment_method")
+    private String paymentMethod;
+
+    @Column(name = "transaction_id")
+    private String transactionId;
+
+    @Column(name = "paid_at")
+    private LocalDateTime paidAt;
 
     /**
      * Add order item to collection

@@ -15,6 +15,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     // Customer methods
     List<Order> findByCustomerOrderByCreatedAtDesc(User customer);
+    List<Order> findAllByOrderByCreatedAtDesc();
 
     // Admin methods
     List<Order> findByStatusAndChefIsNull(OrderStatus status);

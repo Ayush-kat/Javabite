@@ -19,6 +19,13 @@
       <option value="module" />
     </option>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <excluded-from-favorite>
       <branch-storage>
@@ -95,7 +102,7 @@
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
+    "settings.editor.selected.configurable": "settings.qodana",
     "ts.external.directory.path": "/Applications/IntelliJ IDEA.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external",
     "vue.rearranger.settings.migration": "true"
   },
@@ -185,7 +192,7 @@
       <workItem from="1765117318514" duration="43030000" />
       <workItem from="1765696435535" duration="26064000" />
       <workItem from="1765737285834" duration="1603000" />
-      <workItem from="1766686351038" duration="27281000" />
+      <workItem from="1766686351038" duration="43239000" />
     </task>
     <task id="LOCAL-00001" summary="login and signup Authentication done by backend.">
       <option name="closed" value="true" />
@@ -275,7 +282,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766834762256</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Staff invitation is completed.">
+      <option name="closed" value="true" />
+      <created>1766857760029</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1766857760029</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -338,7 +353,8 @@
     <MESSAGE value="Order Assignment bug fixed Order is now routed to chef dashboard and waiter dashboard correctly." />
     <MESSAGE value="Table booking is completed from admin and customer dashboard." />
     <MESSAGE value="Order flow complete and working fine from customer -&gt; admin -&gt; chef -&gt; waiter." />
-    <option name="LAST_COMMIT_MESSAGE" value="Order flow complete and working fine from customer -&gt; admin -&gt; chef -&gt; waiter." />
+    <MESSAGE value="Staff invitation is completed." />
+    <option name="LAST_COMMIT_MESSAGE" value="Staff invitation is completed." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
