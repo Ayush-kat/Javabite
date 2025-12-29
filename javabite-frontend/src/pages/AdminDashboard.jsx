@@ -356,19 +356,6 @@ const AdminDashboard = () => {
                             Home / {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
                         </div>
                     </div>
-                    {/*<div className="header-actions">*/}
-                    {/*    <button className="header-btn" onClick={fetchData}>*/}
-                    {/*        🔄*/}
-                    {/*    </button>*/}
-                    {/*    <button className="header-btn">*/}
-                    {/*        💬*/}
-                    {/*        <span className="notification-dot"></span>*/}
-                    {/*    </button>*/}
-                    {/*    <button className="header-btn">*/}
-                    {/*        🔔*/}
-                    {/*        <span className="notification-dot"></span>*/}
-                    {/*    </button>*/}
-                    {/*</div>*/}
                 </header>
 
                 {/* Error/Success Messages */}
@@ -456,7 +443,6 @@ const AdminDashboard = () => {
                         />
                     )}
 
-                    {activeTab === 'reports' && <ReportsContent />}
                 </div>
             </main>
 
