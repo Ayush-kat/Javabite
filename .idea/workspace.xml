@@ -193,6 +193,7 @@
       <workItem from="1765696435535" duration="26064000" />
       <workItem from="1765737285834" duration="1603000" />
       <workItem from="1766686351038" duration="53607000" />
+      <workItem from="1767035672691" duration="1937000" />
     </task>
     <task id="LOCAL-00001" summary="login and signup Authentication done by backend.">
       <option name="closed" value="true" />
@@ -306,7 +307,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767030197738</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Table Booking history page frontend completed.">
+      <option name="closed" value="true" />
+      <created>1767031211335</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1767031211335</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -372,7 +381,8 @@
     <MESSAGE value="Staff invitation is completed." />
     <MESSAGE value="Order History page for admin is completed." />
     <MESSAGE value="report css and order detail model inline css completed." />
-    <option name="LAST_COMMIT_MESSAGE" value="report css and order detail model inline css completed." />
+    <MESSAGE value="Table Booking history page frontend completed." />
+    <option name="LAST_COMMIT_MESSAGE" value="Table Booking history page frontend completed." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

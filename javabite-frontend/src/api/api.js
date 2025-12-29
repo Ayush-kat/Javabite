@@ -165,51 +165,76 @@ export const bookingApi = {
     },
 };
 
-// ============================================
-// CUSTOMER BOOKING API
-// ============================================
-
+// ============= ✅ CUSTOMER BOOKING HISTORY API =============
 export const customerApi = {
     /**
      * Get all bookings for logged-in customer (history)
      */
     getBookingHistory: async () => {
-        const response = await apiClient.get('/api/customer/bookings/history');
-        return response.data;
+        try {
+            const data = await apiCall('/customer/bookings/history');
+            console.log('✅ Booking history data:', data);
+            return Array.isArray(data) ? data : [];
+        } catch (error) {
+            console.error('❌ Error fetching booking history:', error);
+            throw error;
+        }
     },
 
     /**
      * Get only active/upcoming bookings
      */
     getActiveBookings: async () => {
-        const response = await apiClient.get('/api/customer/bookings/active');
-        return response.data;
+        try {
+            const data = await apiCall('/customer/bookings/active');
+            return Array.isArray(data) ? data : [];
+        } catch (error) {
+            console.error('❌ Error fetching active bookings:', error);
+            throw error;
+        }
     },
 
     /**
      * Get single booking details
      */
     getBookingDetails: async (bookingId) => {
-        const response = await apiClient.get(`/api/customer/bookings/${bookingId}`);
-        return response.data;
+        try {
+            const data = await apiCall(`/customer/bookings/${bookingId}`);
+            return data;
+        } catch (error) {
+            console.error('❌ Error fetching booking details:', error);
+            throw error;
+        }
     },
 
     /**
      * Cancel booking (customer)
      */
     cancelBooking: async (bookingId, reason) => {
-        const response = await apiClient.delete(`/api/customer/bookings/${bookingId}/cancel`, {
-            data: { reason }
-        });
-        return response.data;
+        try {
+            const data = await apiCall(`/customer/bookings/${bookingId}/cancel`, {
+                method: 'DELETE',
+                body: JSON.stringify({ reason: reason || 'Cancelled by customer' }),
+            });
+            return data;
+        } catch (error) {
+            console.error('❌ Error cancelling booking:', error);
+            throw error;
+        }
     },
 
     /**
      * Get booking statistics for customer
      */
     getBookingStats: async () => {
-        const response = await apiClient.get('/api/customer/bookings/stats');
-        return response.data;
+        try {
+            const data = await apiCall('/customer/bookings/stats');
+            console.log('✅ Booking stats data:', data);
+            return data;
+        } catch (error) {
+            console.error('❌ Error fetching booking stats:', error);
+            throw error;
+        }
     }
 };
 
@@ -533,4 +558,5 @@ export default {
     waiterApi,
     bookingApi,
     invitationApi,
+    customerApi,
 };
