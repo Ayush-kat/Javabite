@@ -165,6 +165,54 @@ export const bookingApi = {
     },
 };
 
+// ============================================
+// CUSTOMER BOOKING API
+// ============================================
+
+export const customerApi = {
+    /**
+     * Get all bookings for logged-in customer (history)
+     */
+    getBookingHistory: async () => {
+        const response = await apiClient.get('/api/customer/bookings/history');
+        return response.data;
+    },
+
+    /**
+     * Get only active/upcoming bookings
+     */
+    getActiveBookings: async () => {
+        const response = await apiClient.get('/api/customer/bookings/active');
+        return response.data;
+    },
+
+    /**
+     * Get single booking details
+     */
+    getBookingDetails: async (bookingId) => {
+        const response = await apiClient.get(`/api/customer/bookings/${bookingId}`);
+        return response.data;
+    },
+
+    /**
+     * Cancel booking (customer)
+     */
+    cancelBooking: async (bookingId, reason) => {
+        const response = await apiClient.delete(`/api/customer/bookings/${bookingId}/cancel`, {
+            data: { reason }
+        });
+        return response.data;
+    },
+
+    /**
+     * Get booking statistics for customer
+     */
+    getBookingStats: async () => {
+        const response = await apiClient.get('/api/customer/bookings/stats');
+        return response.data;
+    }
+};
+
 // ============= ADMIN API =============
 export const adminApi = {
     // Dashboard Stats

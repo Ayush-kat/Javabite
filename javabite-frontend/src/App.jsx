@@ -20,6 +20,7 @@ import CustomerTableBookingPage from './pages/CustomerTableBookingPage.jsx';
 import WaiterDashboard from './pages/WaiterDashboard';
 import './styles/App.css';
 import AdminTableBookingManagement from './components/AdminTableBookingManagement';
+import BookingHistoryPage from "./components/BookingHistoryPage.jsx";
 
 const ProtectedRoute = ({ element, requiredRole }) => {
     const { user, isAuthenticated } = useAuth();
@@ -61,8 +62,10 @@ const NavBar = ({ cartCount }) => {
                 <Link to="/contact">Contact</Link>
 
                 {role === 'CHEF' && <Link to="/chef/dashboard">Chef Dashboard</Link>}
+                {role === 'WAITER' && <Link to="/waiter/dashboard">Waiter Dashboard</Link>}
                 {role === 'ADMIN' && <Link to="/admin/dashboard">Admin Dashboard</Link>}
                 {role === 'CUSTOMER' && <Link to="/customer/orders">My Orders</Link>}
+                {role === 'CUSTOMER' && <Link to="/customer/bookings">Table Bookings</Link>}
 
                 <Link to="/cart" className="cart-nav-link">
                     🛒 Cart
@@ -103,6 +106,7 @@ function App() {
                 <Route path="/accept-invite" element={<AcceptInvitation />} />
                 <Route path="/admin/table-bookings" element={<AdminTableBookingManagement />} />
                 <Route path="/book-table" element={<CustomerTableBookingPage />} />
+                <Route path="/customer/bookings" element={<BookingHistoryPage />} />
                 <Route path="/waiter/dashboard" element={
                     <ProtectedRoute element={<WaiterDashboard />} requiredRole="WAITER" />} />
 
