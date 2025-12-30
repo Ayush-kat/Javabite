@@ -689,7 +689,7 @@ const OrderCard = ({ order, onSelect, selected, chefs, waiters, assignForm, setA
 const DashboardContent = ({ stats, pendingOrders, chefs, waiters, menuItems, ...orderProps }) => (
     <div className="dashboard-content">
         <div className="stats-grid">
-            <StatCard title="Pending Orders" value={stats.pendingOrders} icon="🛍️" color="#4caf50" subtitle="Need Assignment" />
+            <StatCard title="Pending Orders" value={stats.pendingOrders} icon="🛍️" color="#4caf50" subtitle="Total Pending orders" />
             <StatCard title="Preparing Orders" value={stats.preparingOrders} icon="👨‍🍳" color="#ff9800" subtitle="In Kitchen" />
             <StatCard title="Ready Orders" value={stats.readyOrders} icon="✓" color="#2196f3" subtitle="Ready to Serve" />
             <StatCard title="Completed Today" value={stats.completedToday} icon="📊" color="#9c27b0" subtitle="Today" />

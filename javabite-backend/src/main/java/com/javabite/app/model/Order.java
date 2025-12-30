@@ -43,18 +43,45 @@ public class Order {
     @JsonIgnoreProperties({"password", "orders"})
     private User waiter;
 
-    // ✅ FIX: Initialize items list to prevent NullPointerException
+    // ✅ Initialize items list
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"order"})
-    @Builder.Default  // ✅ CRITICAL: Ensures Builder also initializes the list
+    @Builder.Default
     private List<OrderItem> items = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private OrderStatus status;
 
+    // ============================================
+    // PAYMENT FIELDS (for OrderDTO)
+    // ============================================
     @Column(name = "payment_status")
     private String paymentStatus = "PENDING";
+
+    @Column(name = "payment_method")
+    private String paymentMethod;
+
+    @Column(name = "transaction_id")
+    private String transactionId;
+
+    @Column(name = "paid_at")
+    private LocalDateTime paidAt;
+
+    // ============================================
+    // ORDER DETAILS (for OrderResponse)
+    // ============================================
+    @Column(name = "subtotal", precision = 10, scale = 2)
+    private BigDecimal subtotal;
+
+    @Column(name = "tax", precision = 10, scale = 2)
+    private BigDecimal tax;
+
+    @Column(name = "discount", precision = 10, scale = 2)
+    private BigDecimal discount;
+
+    @Column(name = "special_instructions", length = 1000)
+    private String specialInstructions;
 
     @Column(name = "admin_notes", length = 1000)
     private String adminNotes;
@@ -62,9 +89,14 @@ public class Order {
     @Column(name = "auto_assigned")
     private Boolean autoAssigned = false;
 
-    // Timestamps
+    // ============================================
+    // TIMESTAMPS
+    // ============================================
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     @Column(name = "chef_assigned_at")
     private LocalDateTime chefAssignedAt;
@@ -87,9 +119,13 @@ public class Order {
     @Column(name = "cancelled_at")
     private LocalDateTime cancelledAt;
 
+    // ============================================
+    // LIFECYCLE CALLBACKS
+    // ============================================
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
         if (status == null) {
             status = OrderStatus.PENDING;
         }
@@ -99,15 +135,27 @@ public class Order {
         if (autoAssigned == null) {
             autoAssigned = false;
         }
-        // ✅ CRITICAL: Ensure items list is initialized
         if (items == null) {
             items = new ArrayList<>();
         }
+        // Calculate totals
+        calculateTotals();
     }
 
-    // ✅ FIX: Safe method to add order items
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+        calculateTotals();
+    }
+
+    // ============================================
+    // BUSINESS LOGIC METHODS
+    // ============================================
+
+    /**
+     * Add order item safely
+     */
     public void addOrderItem(OrderItem item) {
-        // ✅ Ensure list is initialized before adding
         if (this.items == null) {
             this.items = new ArrayList<>();
         }
@@ -115,7 +163,9 @@ public class Order {
         item.setOrder(this);
     }
 
-    // ✅ FIX: Safe method to remove order items
+    /**
+     * Remove order item safely
+     */
     public void removeOrderItem(OrderItem item) {
         if (this.items != null) {
             this.items.remove(item);
@@ -123,18 +173,56 @@ public class Order {
         }
     }
 
-    // Calculate total
-    public BigDecimal getTotal() {
+    /**
+     * Calculate subtotal, tax, and total
+     */
+    public void calculateTotals() {
         if (items == null || items.isEmpty()) {
-            return BigDecimal.ZERO;
+            this.subtotal = BigDecimal.ZERO;
+            this.tax = BigDecimal.ZERO;
+            this.discount = discount != null ? discount : BigDecimal.ZERO;
+            return;
         }
-        return items.stream()
+
+        // Calculate subtotal
+        this.subtotal = items.stream()
                 .map(item -> BigDecimal.valueOf(item.getPriceAtOrder())
                         .multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        // Calculate tax (10% of subtotal)
+        this.tax = subtotal.multiply(new BigDecimal("0.10"));
+
+        // Ensure discount is set
+        if (this.discount == null) {
+            this.discount = BigDecimal.ZERO;
+        }
     }
 
-    // Get items count
+    /**
+     * Get total (subtotal + tax - discount)
+     */
+    public BigDecimal getTotal() {
+        if (subtotal == null) {
+            calculateTotals();
+        }
+        BigDecimal sub = subtotal != null ? subtotal : BigDecimal.ZERO;
+        BigDecimal taxAmount = tax != null ? tax : BigDecimal.ZERO;
+        BigDecimal disc = discount != null ? discount : BigDecimal.ZERO;
+
+        return sub.add(taxAmount).subtract(disc);
+    }
+
+    /**
+     * Get table number from booking
+     */
+    public Integer getTableNumber() {
+        return tableBooking != null ? tableBooking.getTableNumber() : null;
+    }
+
+    /**
+     * Get items count
+     */
     public int getItemsCount() {
         return items != null ? items.size() : 0;
     }

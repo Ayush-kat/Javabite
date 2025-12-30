@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,9 +23,9 @@ public class OrderResponse {
     private String customerName;
     private Long chefId;
     private String chefName;
-    private Long waiterId;  // NEW
-    private String waiterName;  // NEW
-    private Integer tableNumber;  // NEW
+    private Long waiterId;
+    private String waiterName;
+    private Integer tableNumber;
     private List<OrderItemResponse> items;
     private OrderStatus status;
     private BigDecimal subtotal;
@@ -34,28 +35,37 @@ public class OrderResponse {
     private String specialInstructions;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private LocalDateTime readyAt;  // NEW
-    private LocalDateTime servedAt;  // NEW
+    private LocalDateTime readyAt;
+    private LocalDateTime servedAt;
     private LocalDateTime completedAt;
 
+    /**
+     * ✅ FIXED: Null-safe conversion from Order entity
+     */
     public static OrderResponse fromEntity(Order order) {
+        if (order == null) {
+            return null;
+        }
+
         return OrderResponse.builder()
                 .id(order.getId())
-                .customerId(order.getCustomer().getId())
-                .customerName(order.getCustomer().getName())
+                .customerId(order.getCustomer() != null ? order.getCustomer().getId() : null)
+                .customerName(order.getCustomer() != null ? order.getCustomer().getName() : null)
                 .chefId(order.getChef() != null ? order.getChef().getId() : null)
                 .chefName(order.getChef() != null ? order.getChef().getName() : null)
                 .waiterId(order.getWaiter() != null ? order.getWaiter().getId() : null)
                 .waiterName(order.getWaiter() != null ? order.getWaiter().getName() : null)
-                .tableNumber(order.getTableNumber())
-                .items(order.getItems().stream()
+                .tableNumber(order.getTableNumber()) // ✅ Uses method from Order
+                .items(order.getItems() != null && !order.getItems().isEmpty()
+                        ? order.getItems().stream()
                         .map(OrderItemResponse::fromEntity)
-                        .collect(Collectors.toList()))
+                        .collect(Collectors.toList())
+                        : new ArrayList<>())
                 .status(order.getStatus())
-                .subtotal(order.getSubtotal())
-                .tax(order.getTax())
-                .discount(order.getDiscount())
-                .total(order.getTotal())
+                .subtotal(order.getSubtotal() != null ? order.getSubtotal() : BigDecimal.ZERO)
+                .tax(order.getTax() != null ? order.getTax() : BigDecimal.ZERO)
+                .discount(order.getDiscount() != null ? order.getDiscount() : BigDecimal.ZERO)
+                .total(order.getTotal()) // ✅ Uses calculated method
                 .specialInstructions(order.getSpecialInstructions())
                 .createdAt(order.getCreatedAt())
                 .updatedAt(order.getUpdatedAt())
