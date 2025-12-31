@@ -2,7 +2,6 @@ import React from 'react';
 
 const ContactPage = () => {
     // ✅ Your restaurant's actual location
-    // TODO: Replace with your real coordinates
     const RESTAURANT_LOCATION = {
         name: "JavaBite Coffee",
         address: "123 Coffee Street, Downtown",
