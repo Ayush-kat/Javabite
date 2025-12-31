@@ -22,6 +22,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -347,7 +348,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767163019557</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Table booking Availability issue fixed.">
+      <option name="closed" value="true" />
+      <created>1767173029717</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1767173029717</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -418,7 +427,8 @@
     <MESSAGE value="project completed!!. Additional features such as feedback etc." />
     <MESSAGE value="auto-assigned status fixed in ordermodaldetail page." />
     <MESSAGE value="copy link added in Accept invitation staff." />
-    <option name="LAST_COMMIT_MESSAGE" value="copy link added in Accept invitation staff." />
+    <MESSAGE value="Table booking Availability issue fixed." />
+    <option name="LAST_COMMIT_MESSAGE" value="Table booking Availability issue fixed." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -462,7 +472,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/javabite-frontend/src/pages/CustomerOrdersPage.jsx</url>
-          <line>40</line>
+          <line>70</line>
           <option name="timeStamp" value="31" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
