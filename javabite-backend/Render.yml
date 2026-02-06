@@ -1,11 +1,10 @@
 services:
   - type: web
     name: javabite-backend
-    env: java
+    runtime: docker
     region: oregon
     plan: free
-    buildCommand: ./mvnw clean package -DskipTests
-    startCommand: java -Dserver.port=$PORT -jar target/javabite-backend-1.0.0.jar
+    dockerfilePath: ./Dockerfile
     healthCheckPath: /actuator/health
     envVars:
       # Database Configuration (from Railway)
@@ -27,7 +26,3 @@ services:
       # Cookie security (set to true in production with HTTPS)
       - key: COOKIE_SECURE
         value: false
-
-      # Java Memory Configuration (Important for free tier!)
-      - key: JAVA_TOOL_OPTIONS
-        value: -Xmx512m -Xms256m
