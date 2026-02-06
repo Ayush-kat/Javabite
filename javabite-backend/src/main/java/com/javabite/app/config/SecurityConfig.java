@@ -2,6 +2,7 @@ package com.javabite.app.config;
 
 import com.javabite.app.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,6 +29,10 @@ public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
 
+    // Read CORS origins from environment variable
+    @Value("${cors.allowed.origins:http://localhost:3000,http://localhost:5173}")
+    private String allowedOrigins;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -51,11 +56,9 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Allow both localhost ports
-        configuration.setAllowedOrigins(Arrays.asList(
-                "http://localhost:3000",
-                "http://localhost:5173"
-        ));
+        // Parse allowed origins from environment variable (comma-separated)
+        List<String> origins = Arrays.asList(allowedOrigins.split(","));
+        configuration.setAllowedOrigins(origins);
 
         // Allow all HTTP methods
         configuration.setAllowedMethods(Arrays.asList(
@@ -98,7 +101,9 @@ public class SecurityConfig {
                                 "/api/auth/signup",
                                 "/api/auth/login",
                                 "/api/menu/**",
-                                "/error"
+                                "/error",
+                                "/actuator/health",
+                                "/actuator/info"
                         ).permitAll()
 
                         // Authenticated endpoints
