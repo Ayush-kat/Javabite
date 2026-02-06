@@ -417,7 +417,15 @@
       <option name="project" value="LOCAL" />
       <updated>1770379419167</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="Fix railway.toml syntax">
+      <option name="closed" value="true" />
+      <created>1770380390185</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1770380390185</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -494,7 +502,8 @@
     <MESSAGE value="Add Render deployment configuration" />
     <MESSAGE value="Add system.properties for Java 17 on Render" />
     <MESSAGE value="Add Railway config for backend deployment" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add Railway config for backend deployment" />
+    <MESSAGE value="Fix railway.toml syntax" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix railway.toml syntax" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

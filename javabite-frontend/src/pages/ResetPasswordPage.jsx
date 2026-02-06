@@ -34,8 +34,9 @@ const ResetPasswordPage = () => {
 
         try {
             // ✅ Using fetch instead of axios
+            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
             const response = await fetch(
-                `http://localhost:8080/api/auth/password-reset/validate/${token}`,
+                `${API_URL}/auth/password-reset/validate/${token}`,
                 {
                     method: 'GET',
                     credentials: 'include'
@@ -76,8 +77,9 @@ const ResetPasswordPage = () => {
 
         try {
             // ✅ Using fetch instead of axios
+            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
             const response = await fetch(
-                'http://localhost:8080/api/auth/password-reset/confirm',
+                `${API_URL}/auth/password-reset/confirm`,
                 {
                     method: 'POST',
                     headers: {
@@ -446,7 +448,7 @@ const ResetPasswordPage = () => {
 
                     {/* Expiry Warning */}
                     {expiresAt && (
-                        <div style={{...styles.hint, textAlign: 'center', color: '#ff9800'}}>
+                        <div style={{ ...styles.hint, textAlign: 'center', color: '#ff9800' }}>
                             ⏰ This link expires at: {expiresAt}
                         </div>
                     )}

@@ -17,7 +17,8 @@ const ForgotPasswordPage = () => {
 
         try {
             // ✅ Using fetch instead of axios
-            const response = await fetch('http://localhost:8080/api/auth/password-reset/request', {
+            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
+            const response = await fetch(`${API_URL}/auth/password-reset/request`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -263,9 +264,9 @@ const ForgotPasswordPage = () => {
                     )}
 
                     {/* Instructions */}
-                    <div style={{...styles.demoNotice, marginTop: '20px', borderColor: '#2196f3'}}>
-                        <div style={{...styles.demoTitle, color: '#1976d2'}}>📝 Instructions</div>
-                        <p style={{...styles.demoText, color: '#0d47a1'}}>
+                    <div style={{ ...styles.demoNotice, marginTop: '20px', borderColor: '#2196f3' }}>
+                        <div style={{ ...styles.demoTitle, color: '#1976d2' }}>📝 Instructions</div>
+                        <p style={{ ...styles.demoText, color: '#0d47a1' }}>
                             1. Click "Copy Reset Link" button<br />
                             2. Open a new browser tab<br />
                             3. Paste the link in the address bar<br />

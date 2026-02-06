@@ -1,6 +1,6 @@
 // src/api/api.js - COMPLETE WITH AVAILABILITY CHECK
 
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
 
 // Get auth headers with token
 const getAuthHeaders = () => {
