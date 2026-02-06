@@ -1,12 +1,11 @@
 [build]
 builder = "nixpacks"
-watchPatterns = ["javabite-backend/**"]
-
-[build.nixpacksPlan]
-start = "cd javabite-backend && java -Xmx512m -jar target/javabite-backend-1.0.0.jar"
 
 [build.nixpacksPlan.phases.setup]
 nixPkgs = ["jdk17", "maven"]
 
 [build.nixpacksPlan.phases.build]
 cmds = ["cd javabite-backend && mvn clean package -DskipTests"]
+
+[deploy]
+startCommand = "java -Xmx512m -jar javabite-backend/target/javabite-backend-1.0.0.jar"
