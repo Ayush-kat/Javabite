@@ -10,6 +10,7 @@
           <option value="javabite-backend" />
           <option value="javabite-backend" />
           <option value="javabite-backend" />
+          <option value="javabite-backend" />
         </list>
       </option>
       <option name="ignoredPackages">
@@ -19,10 +20,12 @@
           <option value="net.minidev:json-smart:2.5.1" />
           <option value="org.springframework.security:spring-security-crypto:6.3.4" />
           <option value="org.xmlunit:xmlunit-core:2.9.1" />
+          <option value="org.springframework.security:spring-security-config:6.3.4" />
         </list>
       </option>
       <option name="ignoredReasons">
         <list>
+          <option value="Not exploitable" />
           <option value="Not exploitable" />
           <option value="Not exploitable" />
           <option value="Not exploitable" />

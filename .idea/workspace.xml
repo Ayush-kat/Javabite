@@ -82,11 +82,15 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Database Script.data.sql.executor": "Run",
+    "Maven.javabite-backend [clean].executor": "Run",
+    "Maven.javabite-backend [compile].executor": "Run",
+    "Maven.javabite-backend [package].executor": "Run",
+    "Maven.javabite-backend [validate].executor": "Run",
     "Node.js.App.jsx.executor": "Run",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
+    "RequestMappingsPanelWidth0": "327",
+    "RequestMappingsPanelWidth1": "327",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "Spring Boot.JavabiteBackendApplication.executor": "Run",
@@ -145,6 +149,13 @@
       <method v="2" />
     </configuration>
     <configuration name="JavabiteBackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <additionalParameters>
+        <param>
+          <option name="enabled" value="true" />
+          <option name="name" value="management.endpoint.env.show-values" />
+          <option name="value" value="when_authorized" />
+        </param>
+      </additionalParameters>
       <module name="javabite-backend" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.javabite.app.JavabiteBackendApplication" />
       <method v="2">
@@ -374,7 +385,23 @@
       <option name="project" value="LOCAL" />
       <updated>1767201490901</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="Add Render deployment configuration">
+      <option name="closed" value="true" />
+      <created>1770364706841</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1770364706841</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Add Render deployment configuration">
+      <option name="closed" value="true" />
+      <created>1770364781979</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1770364781979</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
