@@ -17,11 +17,11 @@ services:
 
       # CORS Configuration (Your Vercel frontend URL)
       - key: CORS_ORIGINS
-        value: https://javabite-frontend-7g5ijrxeb-ayushkat21-7547s-projects.vercel.app
+        value: javabite-frontend-ocu3vucdj-ayushkat21-7547s-projects.vercel.app
 
       # Frontend URL
       - key: FRONTEND_URL
-        value: https://javabite-frontend-7g5ijrxeb-ayushkat21-7547s-projects.vercel.app
+        value: javabite-frontend-ocu3vucdj-ayushkat21-7547s-projects.vercel.app
 
       # Cookie security (set to true in production with HTTPS)
       - key: COOKIE_SECURE

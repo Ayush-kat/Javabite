@@ -89,8 +89,8 @@
     "Node.js.App.jsx.executor": "Run",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "327",
-    "RequestMappingsPanelWidth1": "327",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "Spring Boot.JavabiteBackendApplication.executor": "Run",
@@ -425,7 +425,15 @@
       <option name="project" value="LOCAL" />
       <updated>1770380390185</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="Use environment variables for API URL">
+      <option name="closed" value="true" />
+      <created>1770381741597</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1770381741597</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -478,7 +486,6 @@
       <path value="$PROJECT_DIR$/javabite-backend" />
       <path value="$PROJECT_DIR$/javabite-frontend" />
     </ignored-roots>
-    <MESSAGE value="login and signup Authentication done by backend." />
     <MESSAGE value="MyOrdersPage for customer and Chef Dashboard with backend integration is completed." />
     <MESSAGE value="Started Working on AdminDashboard.jsx need to fix some issue Dissabled button Problem,Proper Mailing functionality with database syn and new Item image upload issue." />
     <MESSAGE value="CustomerOrdersPage completed with separate current order and Past Orders tabs, Chef Completed order tab remaining and Admin dashboard invite chef and mail,disable button,view history in customers remaining." />
@@ -503,7 +510,8 @@
     <MESSAGE value="Add system.properties for Java 17 on Render" />
     <MESSAGE value="Add Railway config for backend deployment" />
     <MESSAGE value="Fix railway.toml syntax" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix railway.toml syntax" />
+    <MESSAGE value="Use environment variables for API URL" />
+    <option name="LAST_COMMIT_MESSAGE" value="Use environment variables for API URL" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
